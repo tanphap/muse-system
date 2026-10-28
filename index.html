@@ -1,0 +1,578 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+<meta name="color-scheme" content="light dark"/>
+<link rel="icon" href="data:,"/>
+<title>Sơ đồ tư duy hệ thống Muse</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800;900&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f6f3ec; --bg2:#efe9dc; --card:#fffdf8; --card2:#ffffff;
+  --ink:#1a1f1c; --ink2:#3d4741; --muted:#6b756e; --line:#ddd6c4; --line2:#cbc2ab;
+  --teal:#0f766e; --teal-bg:#e0f2ef;
+  --amber:#b45309; --amber-bg:#fef3c7;
+  --blue:#1d4ed8; --blue-bg:#dbeafe;
+  --rust:#9a3412; --rust-bg:#ffedd5;
+  --olive:#4d7c0f; --olive-bg:#ecfccb;
+  --rose:#9f1239; --rose-bg:#ffe4e6;
+  --char:#334155; --char-bg:#e2e8f0;
+  --forest:#166534; --forest-bg:#dcf0e2;
+  --accent:#0f766e;
+  --shadow:0 10px 30px rgba(26,31,28,.08);
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --bg:#121512; --bg2:#171b18; --card:#1c211e; --card2:#202622;
+    --ink:#eef2ed; --ink2:#cbd5cb; --muted:#9aa79e; --line:#2e3630; --line2:#3a453d;
+    --teal:#2dd4bf; --teal-bg:#0f2e2a;
+    --amber:#fbbf24; --amber-bg:#2e2407;
+    --blue:#93c5fd; --blue-bg:#1e2a4a;
+    --rust:#fdba74; --rust-bg:#331a0a;
+    --olive:#a3e635; --olive-bg:#1e2e05;
+    --rose:#fda4af; --rose-bg:#2e0f18;
+    --char:#cbd5e1; --char-bg:#1e293b;
+    --forest:#86efac; --forest-bg:#142a1b;
+    --shadow:0 10px 30px rgba(0,0,0,.35);
+  }
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;font-family:"Be Vietnam Pro",system-ui,sans-serif;background:var(--bg);color:var(--ink);line-height:1.55}
+a{color:var(--teal)}
+button,input{font:inherit}
+.mono{font-family:"IBM Plex Mono",monospace}
+.wrap{max-width:1180px;margin:0 auto;padding:0 18px 48px}
+
+/* Header */
+.header{padding:28px 0 18px;border-bottom:2px solid var(--ink)}
+.header-top{display:flex;flex-wrap:wrap;gap:12px;justify-content:space-between;align-items:flex-start}
+.eyebrow{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);display:flex;gap:8px;align-items:center}
+.eyebrow i{width:8px;height:8px;background:var(--teal);display:inline-block;border-radius:50%}
+h1{font-size:clamp(30px,5vw,52px);line-height:.95;letter-spacing:-.03em;margin:10px 0 12px;font-weight:900;max-width:720px}
+h1 em{font-style:normal;color:var(--teal)}
+.lede{font-size:16.5px;color:var(--ink2);max-width:720px;margin:0}
+.meta-badge{border:1.5px solid var(--line2);background:var(--card);padding:12px 14px;min-width:210px}
+.meta-badge b{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:6px}
+.meta-badge span{font-family:"IBM Plex Mono",monospace;font-size:13px;display:block;line-height:1.6}
+.stats{display:grid;grid-template-columns:repeat(5,1fr);gap:1px;background:var(--line);border:1px solid var(--line);margin-top:18px}
+.stat{background:var(--card);padding:14px 14px 12px}
+.stat strong{font-size:26px;line-height:1;display:block;letter-spacing:-.02em}
+.stat span{font-size:12px;color:var(--muted);line-height:1.35;display:block;margin-top:6px}
+@media(max-width:760px){.stats{grid-template-columns:repeat(2,1fr)}.stat:last-child{grid-column:span 2}}
+
+/* Controls */
+.controls{position:sticky;top:0;z-index:20;background:var(--bg);padding:14px 0 10px;display:flex;flex-wrap:wrap;gap:8px;align-items:center;border-bottom:1px solid var(--line)}
+.search{flex:1;min-width:200px;display:flex;align-items:center;gap:8px;background:var(--card2);border:1px solid var(--line2);padding:9px 12px}
+.search input{border:0;outline:0;background:transparent;width:100%;color:var(--ink)}
+.search input::placeholder{color:var(--muted)}
+.btn{border:1px solid var(--ink);background:var(--ink);color:var(--bg);padding:9px 14px;font-weight:700;font-size:13.5px;cursor:pointer}
+.btn.secondary{background:transparent;color:var(--ink)}
+.btn:active{transform:translateY(1px)}
+.hint{font-size:12.5px;color:var(--muted);width:100%}
+
+/* Layout */
+.layout{display:grid;grid-template-columns:1.65fr .95fr;gap:18px;margin-top:18px;align-items:start}
+@media(max-width:900px){.layout{grid-template-columns:1fr}}
+
+/* Central */
+.center-node{background:var(--ink);color:var(--bg);padding:18px 18px 16px;display:flex;gap:14px;align-items:center}
+.center-node .orb{width:52px;height:52px;flex:0 0 52px;border-radius:50%;border:2px solid var(--bg);display:grid;place-items:center;font-weight:900;font-size:20px;background:var(--teal);color:white}
+.center-node h2{margin:0;font-size:20px;line-height:1.1}
+.center-node p{margin:4px 0 0;font-size:13.5px;opacity:.85;line-height:1.45}
+.legend{display:flex;flex-wrap:wrap;gap:6px;margin:12px 0}
+.legend span{font-size:11.5px;font-weight:600;padding:5px 9px;border:1px solid var(--line2);background:var(--card);display:inline-flex;gap:6px;align-items:center}
+.dot{width:8px;height:8px;border-radius:50%;display:inline-block;flex:0 0 8px}
+
+/* Tree */
+.tree-card{background:var(--card);border:1px solid var(--line);box-shadow:var(--shadow);padding:6px 0 10px}
+.tree, .tree ul{list-style:none;margin:0;padding:0}
+.tree ul{margin-left:22px;padding-left:18px;border-left:1.5px solid var(--line);position:relative}
+.tree li{position:relative;padding:3px 0}
+.tree ul>li::before{content:"";position:absolute;left:-18px;top:20px;width:16px;height:1.5px;background:var(--line2)}
+.node-row{display:flex;align-items:flex-start;gap:8px;padding:7px 10px 7px 6px;margin-right:10px;cursor:pointer;border:1px solid transparent}
+.node-row:hover{background:var(--bg2);border-color:var(--line)}
+.node-row.selected{background:var(--teal-bg);border-color:var(--teal)}
+.toggle{width:26px;height:26px;flex:0 0 26px;border:1px solid var(--line2);background:var(--card2);display:grid;place-items:center;font-size:14px;line-height:1;cursor:pointer;color:var(--ink)}
+.toggle.leaf{opacity:.35;cursor:default}
+.node-text{flex:1;min-width:0}
+.node-title{font-weight:700;font-size:14.5px;line-height:1.3;display:flex;flex-wrap:wrap;gap:7px;align-items:center}
+.node-title .tag{font-family:"IBM Plex Mono",monospace;font-size:10.5px;font-weight:600;letter-spacing:.04em;padding:2px 6px;border:1px solid var(--line2);background:var(--card2);color:var(--muted);text-transform:uppercase}
+.node-desc{font-size:12.8px;color:var(--muted);line-height:1.45;margin-top:2px}
+.node-row.branch .node-title{font-size:16px}
+.node-row.branch{padding-top:10px;padding-bottom:10px}
+.hidden-children{display:none}
+mark{background:#fde68a;color:#111;padding:0 2px}
+@media(prefers-color-scheme:dark){mark{background:#854d0e;color:#fff}}
+
+/* Detail */
+.detail{position:sticky;top:74px;background:var(--card);border:1px solid var(--line);box-shadow:var(--shadow)}
+@media(max-width:900px){.detail{position:static}}
+.detail-head{padding:16px 18px 12px;border-bottom:1px solid var(--line)}
+.detail-head small{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.detail-head h3{margin:6px 0 4px;font-size:22px;line-height:1.15;letter-spacing:-.02em}
+.detail-head p{margin:0;color:var(--ink2);font-size:14px}
+.detail-body{padding:14px 18px 18px}
+.detail-body h4{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:16px 0 8px}
+.detail-body h4:first-child{margin-top:0}
+.detail-body ul{margin:0;padding-left:18px;color:var(--ink2);font-size:14px}
+.detail-body li{margin:5px 0}
+.kv{display:grid;grid-template-columns:110px 1fr;gap:6px 10px;font-size:13.5px}
+.kv dt{color:var(--muted);font-weight:600}
+.kv dd{margin:0;font-family:"IBM Plex Mono",monospace;font-size:12.8px;word-break:break-word}
+.pill-row{display:flex;flex-wrap:wrap;gap:6px}
+.pill{font-size:12px;padding:5px 8px;border:1px solid var(--line2);background:var(--bg)}
+
+/* Workflow */
+.section{margin-top:28px}
+.section-head{display:flex;justify-content:space-between;gap:16px;align-items:end;flex-wrap:wrap;margin-bottom:14px}
+.section-head h2{font-size:26px;letter-spacing:-.02em;margin:0;line-height:1.1}
+.section-head p{margin:0;color:var(--muted);font-size:14px;max-width:560px}
+.flow{display:grid;grid-template-columns:repeat(7,1fr);gap:0;border:1px solid var(--line);background:var(--card)}
+.step{padding:16px 14px;border-right:1px solid var(--line);position:relative}
+.step:last-child{border-right:0}
+.step-num{font-family:"IBM Plex Mono",monospace;font-size:11px;color:var(--teal);font-weight:700;letter-spacing:.1em}
+.step h3{font-size:14.5px;margin:8px 0 6px;line-height:1.25}
+.step p{font-size:12.8px;color:var(--muted);margin:0;line-height:1.5}
+.step::after{content:"›";position:absolute;right:-9px;top:18px;width:18px;height:18px;background:var(--bg);border:1px solid var(--line2);border-radius:50%;display:grid;place-items:center;font-weight:800;z-index:1}
+.step:last-child::after{display:none}
+@media(max-width:900px){.flow{grid-template-columns:1fr}.step{border-right:0;border-bottom:1px solid var(--line)}.step:last-child{border-bottom:0}.step::after{right:auto;left:18px;top:auto;bottom:-10px;transform:rotate(90deg)}}
+
+/* Two cols lower */
+.lower{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:18px}
+@media(max-width:800px){.lower{grid-template-columns:1fr}}
+.panel{background:var(--card);border:1px solid var(--line);padding:18px}
+.panel h3{margin:0 0 4px;font-size:18px}
+.panel>p{margin:0 0 12px;color:var(--muted);font-size:13.5px}
+.rule-list{list-style:none;margin:0;padding:0}
+.rule-list li{padding:11px 0;border-top:1px solid var(--line);display:flex;gap:10px}
+.rule-list li:first-child{border-top:0}
+.rule-list b{font-size:13px;min-width:62px;font-family:"IBM Plex Mono",monospace;color:var(--teal)}
+.rule-list span{font-size:14px;color:var(--ink2)}
+.quota-list{list-style:none;margin:0;padding:0}
+.quota-list li{display:flex;justify-content:space-between;gap:12px;padding:10px 0;border-top:1px solid var(--line);font-size:13.5px}
+.quota-list li:first-child{border-top:0}
+.quota-list strong{font-family:"IBM Plex Mono",monospace;font-size:12.5px;text-align:right}
+.warn{color:#b45309;font-weight:700}
+@media(prefers-color-scheme:dark){.warn{color:#fbbf24}}
+.ok{color:var(--teal);font-weight:700}
+
+.footer{margin-top:26px;padding-top:16px;border-top:1px solid var(--line);display:flex;flex-wrap:wrap;gap:10px;justify-content:space-between;color:var(--muted);font-size:12.5px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="header">
+    <div class="header-top">
+      <div>
+        <div class="eyebrow"><i></i> Mind map · Cập nhật theo trạng thái 28/10/2026</div>
+        <h1>Hệ thống Muse<br/>không phải <em>một chatbot.</em><br/>Là một tổ chức.</h1>
+        <p class="lede">Sơ đồ toàn bộ workflow: <strong>Pháp</strong> ra việc → <strong>Muse (Boss)</strong> điều phối và quyết cuối → <strong>9Router</strong> cấp model → <strong>8 agent</strong> làm chuyên môn → chạy trên <strong>3 máy + VM</strong>, được nuôi bởi <strong>routine tự động</strong> và <strong>bộ nhớ nhiều lớp</strong> — và làm việc theo <strong>phương pháp luận Superpowers</strong>: hỏi rõ → chốt spec → plan → TDD → verify. Riêng các agent stateless có thêm <strong>AgentMemory</strong> — server bộ nhớ giữ lesson từ các lần chạy trước để không lặp lại lỗi cũ. Bấm vào từng nút để mở nhánh và xem chi tiết.</p>
+      </div>
+      <aside class="meta-badge" aria-label="Thông tin sơ đồ">
+        <b>Phạm vi đã chốt</b>
+        <span>✓ Boss &amp; Triumvirate</span>
+        <span>✓ 9Router &amp; quota</span>
+        <span>✓ Agents · Máy · Routine</span>
+        <span>✓ Bộ nhớ &amp; Graph</span>
+        <span>✓ Superpowers v7.0.1 · 15 skill</span>
+        <span>✓ AgentMemory · bộ nhớ của agent</span>
+      </aside>
+    </div>
+    <div class="stats" aria-label="Số liệu chính">
+      <div class="stat"><strong>87</strong><span>model qua 9Router — ag 27 · cx 19 · gh 36 · oc 4 · mmf 1 (15:26, 28/10)</span></div>
+      <div class="stat"><strong>8</strong><span>agent chuyên môn trong pipeline Triumvirate</span></div>
+      <div class="stat"><strong>3 + VM</strong><span>máy Windows qua Tailscale: máy B · máy A · máy C + VM Muse</span></div>
+      <div class="stat"><strong>478 / 368</strong><span>nodes / edges trong Muse Memory Graph (baseline 26/10)</span></div>
+      <div class="stat"><strong>5</strong><span>routine nền chính: sync 4h · tin 07:23 · backup T2 · graph · watchdog 15′</span></div>
+    </div>
+  </header>
+
+  <div class="controls">
+    <label class="search"><span aria-hidden="true">⌕</span><input id="search" type="search" placeholder="Tìm trong sơ đồ — thử: argon, backup, agentmemory, lesson, Tailscale, critic, MEMORY, superpowers, TDD…" autocomplete="off"/></label>
+    <button class="btn" id="expandAll" type="button">Mở hết</button>
+    <button class="btn secondary" id="collapseAll" type="button">Thu gọn</button>
+    <button class="btn secondary" id="focusWorkflow" type="button">Xem luồng workflow ↓</button>
+    <span class="hint">Mẹo: bấm <b>[+ / −]</b> để thu/mở nhánh · bấm vào tên nút để xem thẻ chi tiết bên phải (trên điện thoại: ở ngay dưới sơ đồ).</span>
+  </div>
+
+  <div class="layout">
+    <main>
+      <div class="center-node">
+        <div class="orb">M</div>
+        <div>
+          <h2>TRUNG TÂM: MUSE — cho Pháp (TNOC2)</h2>
+          <p>Người dùng là Pháp. Mọi nhánh dưới đây đều phục vụ một vòng lặp: nhận việc → phân tích → làm → kiểm chứng → ghi nhớ.</p>
+        </div>
+      </div>
+      <div class="legend" id="legend"></div>
+      <section class="tree-card" aria-label="Sơ đồ tư duy">
+        <ul class="tree" id="tree"></ul>
+      </section>
+    </main>
+
+    <aside class="detail" id="detail" aria-live="polite">
+      <div class="detail-head">
+        <small id="d-branch">Chi tiết nút</small>
+        <h3 id="d-title">Chọn một nút trong sơ đồ</h3>
+        <p id="d-desc">Thẻ này hiện mô tả, thông số và các nút con của mục ông đang chọn.</p>
+      </div>
+      <div class="detail-body" id="d-body">
+        <h4>Bắt đầu từ đâu?</h4>
+        <ul>
+          <li><b>Muốn hiểu ai quyết?</b> → mở nhánh <b>1 · Boss</b>.</li>
+          <li><b>Muốn hiểu model ở đâu ra?</b> → mở nhánh <b>2 · 9Router</b>.</li>
+          <li><b>Muốn hiểu việc chạy tự động lúc nào?</b> → mở nhánh <b>5 · Routine</b>.</li>
+          <li><b>Muốn hiểu agent làm code theo phương pháp nào?</b> → mở nhánh <b>7 · Superpowers</b>.</li>
+          <li><b>Muốn hiểu agent nhớ bài học cũ bằng cách nào?</b> → mở nhánh <b>8 · AgentMemory</b>.</li>
+        </ul>
+      </div>
+    </aside>
+  </div>
+
+  <section class="section" id="workflow">
+    <div class="section-head">
+      <h2>Luồng workflow — một việc đi qua hệ thống thế nào</h2>
+      <p>Đây là trục ngang của sơ đồ: cùng một việc, nhìn theo thời gian thay vì theo cấu trúc.</p>
+    </div>
+    <div class="flow">
+      <article class="step"><div class="step-num">BƯỚC 01</div><h3>Pháp ra việc</h3><p>Chat, side chat hoặc routine hẹn giờ. Việc phức tạp phải kèm bó bằng chứng: log, code, timeline.</p></article>
+      <article class="step"><div class="step-num">BƯỚC 02</div><h3>Boss phân loại</h3><p>Muse chọn tầng <b>FULL / LIGHT / DIRECT</b>. Typo, config, docs đi DIRECT; còn lại không bỏ qua pipeline.</p></article>
+      <article class="step"><div class="step-num">BƯỚC 03</div><h3>Não phân tích</h3><p>Việc khó: gọi <span class="mono">cx/gpt-6-astra</span> qua <span class="mono">codex-judge.sh</span> <b>ngay từ đầu</b>, song song với Muse.</p></article>
+      <article class="step"><div class="step-num">BƯỚC 04</div><h3>Tay làm</h3><p>Coder (GPT) viết code · Writer/Researcher sinh nội dung bằng Gemini argon-medium — qua 9Router :20128. Phiên Muse Code làm theo Superpowers: brainstorming → plan → TDD → verify.</p></article>
+      <article class="step"><div class="step-num">BƯỚC 05</div><h3>Critic soi</h3><p>Critic (Claude Sonnet 5-5) review. Chỉ dừng ở <b>APPROVE</b>, tối đa 2 vòng. Route ag chết → bắt buộc qua Gemini 4 Argon.</p></article>
+      <article class="step"><div class="step-num">BƯỚC 06</div><h3>Boss quyết &amp; chạy tool</h3><p>Muse quyết cuối và là người duy nhất chạy tool thật: file, SSH, browser, artifact, connector.</p></article>
+      <article class="step"><div class="step-num">BƯỚC 07</div><h3>Ghi nhớ &amp; lặp lại</h3><p>Kết quả bền → MEMORY.md · việc hằng ngày → daily notes → graph cập nhật → routine chu kỳ sau tự chạy. Lesson critic/test của pipeline → AgentMemory, để lần chạy sau coder nhận past_lessons và không lặp lỗi cũ.</p></article>
+    </div>
+
+    <div class="lower">
+      <section class="panel">
+        <h3>Luật tuyệt đối (SYSTEM_RULES)</h3>
+        <p>Những quy tắc không thương lượng — sơ đồ vẽ đúng thì phải hiện rõ chúng.</p>
+        <ul class="rule-list">
+          <li><b>Mục 8</b><span><strong>Việc phức tạp → Muse xử lý.</strong> Chẩn đoán, root cause, kiến trúc không giao model nhẹ để tiết kiệm token, không kết luận vội khi chưa kiểm chứng đủ.</span></li>
+          <li><b>Mục 10.1</b><span><strong>Mọi việc liên quan code đều dùng Codex (cx/*)</strong> — viết/sửa qua Coder GPT, phân tích qua Astra. Muse không tự viết code thay Codex, trừ tầng DIRECT.</span></li>
+          <li><b>Mục 10.2</b><span><strong>Việc khó bắt buộc gọi Codex phân tích ngay từ đầu</strong>, kể cả việc hệ trọng mục 8. Astra phân tích song song — Muse vẫn quyết cuối.</span></li>
+          <li><b>Karpathy</b><span><strong>Karpathy Coding Guidelines là bắt buộc</strong> cho mọi việc code, đã nhúng vào system prompt của Coder trong agents.json.</span></li>
+          <li><b>Lớp 3/4</b><span><strong>Superpowers là lớp phương pháp luận</strong> trong stack 4 lớp: lệnh của Pháp &gt; SYSTEM_RULES &gt; cổng Agent Rule &gt; Superpowers. Nó định nhịp làm (brainstorming → plan → TDD → verify) nhưng không thay quyền quyết của Boss và không bypass cổng bằng chứng.</span></li>
+          <li><b>Token</b><span>Mô hình <strong>“não Codex, tay Muse/Gemini”</strong>: suy luận khó đốt quota Codex; sinh text thường dùng Gemini để tiết kiệm Additional tokens.</span></li>
+        </ul>
+      </section>
+
+      <section class="panel">
+        <h3>Quota 9Router — ảnh chụp 14:38, 28/10</h3>
+        <p>Mỗi pool tính riêng, giờ reset khác nhau. Đốt pool này không trừ pool kia — trừ trong nội bộ Argon.</p>
+        <ul class="quota-list">
+          <li><span>Argon high / medium / low<br/><small style="color:var(--muted)">Nhiều khả năng chung 1 pool · reset 31/10 00:50</small></span><strong class="warn">gần cạn (snapshot 28/10/2026)</strong></li>
+          <li><span>Claude Opus / Sonnet 5-5 (mọi tier)<br/><small style="color:var(--muted)">Critic chính đang thoải mái · reset 19:38 hôm nay</small></span><strong class="ok">0 / 1000</strong></li>
+          <li><span>Codex Plus — session / weekly<br/><small style="color:var(--muted)">Weekly reset 04/11 14:38</small></span><strong class="ok">0 / 100 · 0 / 100</strong></li>
+          <li><span>GitHub Premium (gh/grok-4.7)<br/><small style="color:var(--muted)">Vượt mức → 503 tới reset 01/11 07:00</small></span><strong class="warn">1.506 / 1.500</strong></li>
+          <li><span>Antigravity weekly — Gemini / Claude-GPT<br/><small style="color:var(--muted)">Reset 31/10 07:20 / 02/11 10:58</small></span><strong>49 / 1000 · 114 / 1000</strong></li>
+        </ul>
+        <p style="font-size:12.5px;color:var(--muted);margin:12px 0 0">Hệ quả thực tế ngày 28/10: toàn bộ 6 chỗ dùng argon-high đã đổi về <span class="mono">argon-medium</span> — nhưng nếu chung pool thì đổi tier không né được giới hạn, phải chờ snapshot quota tới để kết luận.</p>
+      </section>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <span>Sơ đồ tĩnh, dựng từ trạng thái hệ thống đã ghi trong bộ nhớ tới 28/10/2026 — số quota và model là ảnh chụp tại thời điểm ghi, không tự cập nhật.</span>
+    <span class="mono">Boss · 9Router · Agents · Máy · Routine · Bộ nhớ · Superpowers · AgentMemory</span>
+  </footer>
+</div>
+
+<script>
+var BRANCHES = {
+  boss:{label:"1 · Boss — Muse", color:"var(--teal)", bg:"var(--teal-bg)"},
+  router:{label:"2 · 9Router Gateway", color:"var(--amber)", bg:"var(--amber-bg)"},
+  agents:{label:"3 · Agents — Triumvirate", color:"var(--blue)", bg:"var(--blue-bg)"},
+  machines:{label:"4 · Máy & Hạ tầng", color:"var(--rust)", bg:"var(--rust-bg)"},
+  routine:{label:"5 · Routine & Tự động hoá", color:"var(--olive)", bg:"var(--olive-bg)"},
+  memory:{label:"6 · Bộ nhớ & Tri thức", color:"var(--rose)", bg:"var(--rose-bg)"},
+  superpowers:{label:"7 · Superpowers — Phương pháp luận", color:"var(--char)", bg:"var(--char-bg)"},
+  agentmemory:{label:"8 · AgentMemory — Bộ nhớ của agent", color:"var(--forest)", bg:"var(--forest-bg)"}
+};
+
+var DATA = [
+{ id:"boss", branch:"boss", title:"BOSS — Muse (Controller)", tag:"Quyết cuối", desc:"Trung tâm điều phối. Nhận việc từ Pháp, phân tầng, gọi não/tay, chạy tool và chịu trách nhiệm kết quả.",
+  detail:{ kv:[["Vai trò","Boss / Controller — quyết định cuối"],["Chạy tool","Chỉ Muse — worker có tool luôn là Muse"],["File luật","~/workspace/9router/SYSTEM_RULES.md"]],
+    points:["Không tự viết code thay Codex (trừ DIRECT: typo / config / docs).","Việc phức tạp: không kết luận một mình — đưa cả bó bằng chứng cho Astra phân tích song song ngay từ đầu.","Kiểm chứng chính công cụ đo / script thăm dò trước khi tin số đo."],
+    pills:["FULL / LIGHT / DIRECT","Karpathy bắt buộc","Não Codex · Tay Gemini"]},
+  children:[
+    {title:"Phân tầng pipeline", tag:"FULL·LIGHT·DIRECT", desc:"FULL = đủ coder + critic · LIGHT = rút gọn · DIRECT = Muse làm thẳng cho việc nhỏ rõ ràng.", detail:{points:["Critic chỉ dừng ở APPROVE, tối đa 2 vòng.","Route ag/* chết (503/timeout) → bắt buộc chuyển critic qua Gemini 4 Argon, không bỏ vòng critic."]}},
+    {title:"Điều phối & quyết định", desc:"Tổng hợp phân tích của Astra + review của Critic, chọn phương án cuối, chia việc cho agent và subagent (depth tối đa 2)."},
+    {title:"Chạy tool thật", desc:"File & workspace, SSH/Tailscale, browser, connector (Gmail, Drive, GitHub, Notion…), artifact, media — mọi tác động ra ngoài đều qua tay Boss."},
+    {title:"Kiểm chứng & báo cáo", desc:"Đối chiếu kết quả với nguồn thật trước khi báo xong; việc chưa xong nói rõ đang ở trạng thái nào, không báo tiến độ khi chưa có kết quả."}
+  ]},
+{ id:"router", branch:"router", title:"9ROUTER — Cổng model duy nhất", tag:"localhost:20128", desc:"Gateway local gom mọi subscription của Pháp thành một API. Mọi agent đều gọi model qua đây.",
+  detail:{ kv:[["Binary","~/.local/bin/9router · v0.5.109"],["Địa chỉ","localhost:20128"],["API key","~/workspace/9router/.env (chmod 600)"],["Nâng cấp","0.5.104 → 0.5.109 · 24/10 00:57 · script ~/workspace/9router/upgrade.sh"],["Khởi động","~/workspace/9router/start.sh"]],
+    points:["87 model tại lần check 15:26 ngày 28/10 — tăng 1 so với 26/10 nhờ gh/grok-4.6 mới xuất hiện.","6 id cx có hậu tố [1m] trong list gateway là ký tự escape dư, không phải model riêng.","Watchdog + hook poll mỗi 15 phút giữ gateway sống."],
+    pills:["ag/* Antigravity","cx/* Codex","gh/* Copilot","oc/* · mmf/*"]},
+  children:[
+    {title:"ag/* — Antigravity (27 model)", tag:"Subscription OAuth", desc:"Nhà của Gemini Argon, Claude Sonnet/Opus 5-5 và Gemini Flash. Là đường của Critic và của 'tay' sinh text.", detail:{points:["Argon high/medium/low cùng 1 pool và cùng giờ reset → nhiều khả năng chung 1 pool Argon.","Pool riêng: gemini_weekly 49/1000 · claude_gpt_weekly 114/1000 · Claude từng model 0/1000."]},
+      children:[
+        {title:"ag/gemini-4-argon-medium", tag:"Từ 28/10", desc:"Model 'tay' hiện hành: model chính của researcher / archivist / backup + fallback của critic / testing / writer. Đổi từ argon-high ngày 28/10 theo lệnh Pháp."},
+        {title:"ag/claude-sonnet-5-5", tag:"Critic chính", desc:"Critic hiện hành của pipeline (đổi từ opus-4-6-thinking ngày 23/10). Quota 0/1000 — đang rỗng."},
+        {title:"ag/gemini-3.8-flash", tag:"Chỉ 1 chỗ", desc:"Chỉ còn dùng trong muse-memory-graph/update.sh — Pháp duyệt riêng sáng 28/10 vì Argon hết quota, trong script có note cấm đổi lại Argon."}
+      ]},
+    {title:"cx/* — GPT Plus / Codex (19 model)", tag:"Não", desc:"Đường của Coder và của phân tích phức tạp. Quota Plus: session 0/100 · weekly 0/100 (reset 04/11).", children:[
+      {title:"cx/gpt-6-astra", tag:"Phân tích", desc:"'Não' phân tích: gọi qua ~/workspace/9router/codex-judge.sh, timeout đã nâng 120s → 300s (23/10)."},
+      {title:"Coder GPT (cx/*)", desc:"Viết và sửa code trong pipeline — theo luật mục 10, Muse không giành việc này."}
+    ]},
+    {title:"gh/* — GitHub Copilot (36 model)", tag:"Vision", desc:"Vision chính gh/grok-4.7 nằm ở đây — đang 503 vì GitHub Premium vượt mức 1.506/1.500, reset 01/11 07:00. Có thêm gh/grok-4.6 từ 28/10."},
+    {title:"Script & Console đi kèm", desc:"codex-judge.sh / gemini-judge.sh là hai 'cửa gọi nhanh' · Console artifact '9router-console' (UI tiếng Việt) đồng bộ qua cron nine-router-sync mỗi 4 giờ. Helper agent_memory.py trong cùng thư mục nối pipeline sang AgentMemory (nhánh 8).", children:[
+      {title:"agent_runner.py — chống 'ok' giả", desc:"Chặn câu 'no longer available' để ép fallback thay vì ghi log thành công giả (fix 23/10)."},
+      {title:"Mật khẩu dashboard nội bộ", desc:"Pháp quyết KHÔNG đổi (13/10) — chỉ ghi vị trí lưu, không ghi giá trị vào bộ nhớ hay chat."}
+    ]},
+    {title:"AgentRouter — đường dự phòng", tag:"Ưu tiên sau", desc:"Connector custom.agentrouter (agentrouter.org). Định nghĩa của Pháp: trợ lý của Muse, chuyên critic / testing / code — CHỈ gọi khi 9Router lỗi.", detail:{points:["Model còn thấy ngày 23/10: gpt-6.1-sol (qua /v1/responses); deepseek-v4-flash đã không còn trong list.","Quirk: prompt tiếng Việt dài bị content-blocked (400) — prompt tiếng Anh, yêu cầu trả tiếng Việt thì chạy được.","Không nằm trong chain của agent backup trong 9Router."]}}
+  ]},
+{ id:"agents", branch:"agents", title:"AGENTS — AI Triumvirate", tag:"3 phe · 8 agent", desc:"Luật tuyệt đối từ 13/10, đang LIVE: GPT = Coder · Antigravity/Gemini = Critic · Muse = Boss. Không phe nào tự làm hết một việc lớn.",
+  detail:{ kv:[["Coder","GPT — cx/*"],["Critic","Antigravity / Gemini — ag/*"],["Boss","Muse — quyết cuối"]],
+    points:["Cấu hình agent sống ở Console + agents.json — hai nơi phải khớp nhau; mỗi lần đổi model đều upsert console rồi verify bằng getagents.","Đợt đổi 28/10 chạm đúng 6/8 agent; coder và planner không đụng."],
+    pills:["coder","planner","critic","testing","writer","researcher","archivist","backup"]},
+  children:[
+    {title:"coder", tag:"cx/*", desc:"Viết/sửa code. System prompt đã nhúng Karpathy Coding Guidelines."},
+    {title:"planner", tag:"Lập kế hoạch", desc:"Chia việc, dựng plan — 1 trong 2 agent không đổi trong đợt argon-medium."},
+    {title:"critic", tag:"ag/claude-sonnet-5-5", desc:"Review độc lập, chỉ dừng ở APPROVE (tối đa 2 vòng). Fallback: ag/gemini-4-argon-medium."},
+    {title:"testing", desc:"Kiểm thử kết quả coder. Fallback: argon-medium."},
+    {title:"writer", desc:"Sinh text / nội dung — 'tay' Gemini. Fallback: argon-medium."},
+    {title:"researcher", tag:"argon-medium", desc:"Tra cứu, nghiên cứu. Model chính đã đổi high → medium ngày 28/10, smoke test chạy đúng medium."},
+    {title:"archivist", tag:"argon-medium", desc:"Lưu trữ, tổ chức tri thức vào bộ nhớ. Model chính: argon-medium."},
+    {title:"backup", tag:"Chain 4 tầng", desc:"Agent dự phòng với chain fallback riêng — không chứa AgentRouter.", detail:{points:["Chain: ag/gemini-4-argon-medium → cx/gpt-6-astra → gh/grok-4.7 → ag/claude-sonnet-5-5.","Lưu ý: mắt gh/grok-4.7 trong chain đang 503 tới 01/11 do quota GitHub."]}},
+    {title:"Jev / TypeSafe — cổng chấm điểm phụ", tag:"custom.typesafe", desc:"Tích hợp qua skill + wrapper (không sửa core Muse): helper jev.py gọi api.typesafe.ai, model jev-latest, việc choice / score / noul.", detail:{points:["Ngưỡng: ≥0,85 tự làm · 0,60–0,85 xem lại hoặc xin xác nhận · <0,60 chuyển người / model lớn hơn.","Credential lưu qua Secure Vault — không ghi key vào file hay chat."]}},
+    {title:"AgentMemory — trí nhớ chung của cả Triumvirate", tag:"Xem nhánh 8", desc:"8 agent đều stateless — trí nhớ dài hạn của chúng nằm ở server AgentMemory riêng: coder nhận past_lessons trước IMPLEMENT, critic và testing để lại lesson sau mỗi lần bắt lỗi. Chi tiết đầy đủ ở nhánh 8."}
+  ]},
+{ id:"machines", branch:"machines", title:"MÁY — Nơi hệ thống sống", tag:"Tailscale", desc:"Một VM điều phối ở giữa, ba máy Windows của Pháp nối qua Tailscale, cộng iPhone ở vai trò client.",
+  detail:{ kv:[["Mạng","Tailscale · proxy CONNECT 3130"],["SSH config","~/workspace/tailscale-restore/ssh_config"],["Khoá","ed25519 · dùng chung"]],
+    points:["Đổi IP tailnet của VM thì allowlist của Windows-MCP chặn ngay — IP lúc triển khai là IP nội bộ (đã ẩn)."],
+    pills:["VM Muse","máy B","máy A","máy C","iPhone"]},
+  children:[
+    {title:"VM Muse (máy này)", tag:"Điều phối", desc:"Nơi Boss chạy, 9Router chạy (localhost:20128), workspace ~/workspace chứa mọi dự án, skill, connector và bộ nhớ. Muse Code 1.4.13 + plugin Superpowers cũng sống ở đây — xem nhánh 7."},
+    {title:"máy B — IP nội bộ (đã ẩn)", tag:"user: pc", desc:"Máy cá nhân của Pháp. User pc thuộc Administrators (đổi từ Maren ngày 22/10; Maren giữ làm fallback, không xoá).", children:[
+      {title:"Windows-MCP trên máy B", desc:"v4.1.3 · streamable-http /mcp · port 8000 · bind IP tailnet · Bearer + TLS tự ký · Scheduled Task 'Windows-MCP' AtLogOn."}
+    ]},
+    {title:"máy A — IP nội bộ (đã ẩn)", tag:"user: admin (đã ẩn)", desc:"Máy công việc TNOC2: NSN_FAULT / Ring Nam dev, TaskFlow backend, dự án 'Về Việt Nam'. Lưu ý: .venv trên máy A hỏng — fallback py -3.12 (chỉ ở hệ cũ).", children:[
+      {title:"Windows-MCP trên máy A", desc:"Cùng cấu hình máy B: 21 tool, Snapshot + Screenshot chạy được. Khi Pháp đang dùng máy, tool có thể trả USER_CONTROL sau ~10s — chờ máy rảnh rồi gọi lại."},
+      {title:"⚠ TUYỆT ĐỐI không mở dashboard Ciena trên A", desc:"FolderSync 2 chiều kéo bản sao ciena.db về A lúc collector ghi → malformed. Đã mask phía A; phía B còn chờ sửa mask tương tự."}
+    ]},
+    {title:"máy C — IP nội bộ (đã ẩn)", tag:"HP 255 G9", desc:"Hostname máy C · user máy A (admin). Athlon Silver 3050U 2 nhân 2,3 GHz · RAM 38 GB · SSD NVMe 512 GB · Win 11 Pro. Giới hạn thật là CPU, không phải RAM/SSD."},
+    {title:"SSH qua Tailscale", desc:"Alias alias máy B / alias máy C trong ssh_config dùng chung. Key admin qua file authorized_keys dành cho admin nên đổi user không cần nạp key mới."},
+    {title:"iPhone — client ở biên", desc:"Client của VPN riêng WireGuard (SPEC riêng, chưa cài — chờ duyệt) và là đầu cuối đọc bản tin / chat với Muse."}
+  ]},
+{ id:"routine", branch:"routine", title:"ROUTINE — Việc tự chạy không cần gọi", tag:"Cron & Task", desc:"Lớp khiến hệ thống 'sống' cả khi Pháp không chat: đồng bộ, đưa tin, sao lưu, cập nhật graph và giữ gateway.",
+  detail:{ points:["Mặt trái đã biết: các cron nền chạy bằng agent Muse (nine-router-sync, heartbeat, feed-pulse mỗi giờ) cộng với việc mỗi lượt chat gửi lại toàn bộ context là hai nguồn đốt Additional tokens chính.","Khi Pháp hỏi 'credit đâu mất' → tra bằng subscription-status."],
+    pills:["nine-router-sync · 4h","telegram-daily-news · 07:23","muse-weekly-backup · T2 03:23","memory-graph · hằng tuần","watchdog · 15′"]},
+  children:[
+    {title:"nine-router-sync", tag:"Mỗi 4 giờ", desc:"Đồng bộ Console 9Router: model, quota, cấu hình agent về artifact console tiếng Việt."},
+    {title:"telegram-daily-news", tag:"07:23 hằng ngày", desc:"Đọc tin 24h qua của 12 kênh tin tức qua Telegram Web (phiên QR, hết hạn quét lại). Chỉ kênh tin — KHÔNG đọc DM 1:1. Gửi vào side chat, BẮT BUỘC bằng tiếng Việt.", detail:{points:["Từng bị tắt oan 23/10 khi goal bị đánh completed → bản tin 24/10 không chạy.","Pháp bật lại cả 3 routine ngày 24/10; bản tin chạy lại từ Chủ nhật 25/10."]}},
+    {title:"muse-weekly-backup", tag:"Thứ Hai · 03:23", desc:"Sao lưu tự động, chế độ --pubkey (không cần passphrase). Im lặng khi thành công, báo side chat khi lỗi."},
+    {title:"muse-memory-graph update", tag:"Hằng tuần từ 28/10", desc:"Cron cập nhật graph bộ nhớ 1 lần/tuần (trước đó daily 09:35). Im lặng khi thành công, báo khi lỗi. Chạy tay ./update.sh khi cần gấp."},
+    {title:"9Router watchdog + hook poll", tag:"Mỗi 15 phút", desc:"Giữ gateway :20128 sống, phát hiện route chết để pipeline fallback đúng luật — và giữ cả AgentMemory :3111 sống (section riêng trong watchdog.sh từ 18/10, xem nhánh 8)."},
+    {title:"Routine công việc trên máy B (ngoài Muse)", tag:"Sản xuất", desc:"Collector Ciena chạy cadence 15 phút (task CienaCollector15m trên B) và hệ RingNamNokia v1 với 5 task AtStartup — là tải công việc mà hạ tầng Muse đang phục vụ, không phải routine của chính Muse."}
+  ]},
+{ id:"memory", branch:"memory", title:"BỘ NHỚ — Hệ thống nhớ gì, nhớ ở đâu", tag:"Nhiều lớp", desc:"Không có một 'trí nhớ' duy nhất: sự thật bền nằm ở file markdown, quan hệ nằm ở graph, chuyên môn nằm ở skill, và quyền truy cập nằm ở connector.",
+  detail:{ kv:[["Sự thật bền","MEMORY.md"],["Việc theo ngày","memory/YYYY-MM-DD.md · 21 file daily"],["Con người","memory/people/ · 10 trang + INDEX"],["Nhóm","memory/groups/ · TNOC2"]],
+    points:["Fact bền tìm được ở bất kỳ lớp nào thì promote 1 dòng vào MEMORY.md.","Toàn văn MEMORY/AGENTS trước rút gọn (20/10) lưu ở ~/workspace/reference/context-archive/ — đọc khi cần chi tiết sự cố cũ."],
+    pills:["MEMORY.md","USER.md","Daily notes","People / Groups","Memory Graph","Skills","Connectors"]},
+  children:[
+    {title:"MEMORY.md + daily notes", desc:"MEMORY.md là bản curated dài hạn được inject mỗi phiên; daily notes giữ chi tiết theo ngày. USER.md giữ hồ sơ Pháp, TOOLS.md giữ quirk môi trường, AGENTS.md giữ luật làm việc."},
+    {title:"People & Groups", desc:"10 trang con người (Karpathy + các đầu mối onsite CPT/TNOC2) và nhóm TNOC2 — quan hệ và vai trò, không phải dossier."},
+    {title:"Muse Memory Graph", tag:"478 nodes · 368 edges", desc:"Graphify dựng từ 35 file (MEMORY + 21 daily + people/groups, loại memory/bank/). Baseline mới 26/10 sau 3 lần update lỗi do chunking + cache nhiễm.", detail:{ kv:[["Thư mục","~/workspace/muse-memory-graph/"],["Update","./update.sh · --token-budget 20000"],["Model dựng graph","ag/gemini-3.8-flash (duyệt riêng 28/10)"]],
+      points:["Update incremental 28/10 vẫn bị shrink guard chặn vì ID node đổi khi model diễn đạt lại nhãn — graph vẫn ở baseline 26/10."],
+      pills:["lookup.sh","explain / path","query"]},
+      children:[
+        {title:"Thứ tự tra cứu (chốt 22/10)", tag:"Rẻ → đắt", desc:"1) MEMORY đã inject → 2) memory_search (chat/quyết định) → 3) ./lookup.sh grep giới hạn (rẻ nhất khi biết từ khoá) → 4) graph CHỈ khi 0 hit / >50 hit / câu hỏi quan hệ (ưu tiên explain, path trước query) → 5) đọc cửa sổ ~40 dòng quanh hit, không đọc cả file."}
+      ]},
+    {title:"AgentMemory — bộ nhớ của agent, KHÔNG phải của Muse", tag:"Xem nhánh 8", desc:"Server bộ nhớ riêng (:3111/:3113) lưu lesson cho agent 9Router stateless. Cố tình tách khỏi bộ nhớ của Boss: verdict từ 18/10 là không chạy hai hệ bộ nhớ song song cho Muse vì sẽ phân mảnh — chi tiết ở nhánh 8."},
+    {title:"Skills — chuyên môn đóng gói", desc:"Playbook tái dùng: hệ thống (documents, email, scheduling, shopping…) + custom của Pháp.", children:[
+      {title:"local-karpathy-guidelines", desc:"Luật code bắt buộc cho mọi việc code."},
+      {title:"local-graphify · local-ui-ux-pro-max", desc:"Graphify để hỏi codebase bằng graph; UI/UX Pro Max là design intelligence bắt buộc khi làm giao diện."},
+      {title:"jev · rea · agent-rule-workflow", desc:"Skill custom: Jev/TypeSafe, REA (reverse engineering theo clean-room SPEC → duyệt → builder → critic), và workflow luật agent."},
+      {title:"Superpowers (plugin Muse)", desc:"15 skill phương pháp luận của obra/superpowers cài ở tầng plugin/skill — xem hẳn nhánh 7 ở dưới."}
+    ]},
+    {title:"Connectors — tay nối ra ngoài", desc:"Gmail, Google Calendar / Docs / Drive, GitHub, Dropbox, Notion đã nối; cộng custom.typesafe và custom.agentrouter. Mỗi connector có CONNECTOR.md riêng — đọc trước khi dùng, verify trạng thái trước khi hứa việc."}
+  ]},
+{ id:"superpowers", branch:"superpowers", title:"SUPERPOWERS — Lớp phương pháp luận", tag:"obra/superpowers · v7.0.1", desc:"Bộ 15 skill phương pháp luận cho agent code, cắm vào Muse: agent không nhảy vào viết code ngay — hỏi rõ ý định, chốt spec, lập plan, làm TDD, review, verify rồi mới được nhận xong.",
+  detail:{ kv:[["Upstream","obra/superpowers · pin v7.0.1"],["Repo local","~/workspace/superpowers (v7.0.1) · bản cài ~/workspace/superpowers-dev (dev b58deb3)"],["Manifest",".muse-plugin/plugin.json — 15 skill · 0 command · 0 MCP · 1 hook SessionStart (timeout 5s)"],["Host","Plugin của Muse Code 1.4.13 trên VM"]],
+    points:["Vị trí trong stack luật 4 lớp (chốt 25/10): lệnh trực tiếp của Pháp > SYSTEM_RULES > cổng Agent Rule > Superpowers. Superpowers là methodology — không thay authority của Agent Rule, helper không được bypass cổng bắt buộc.","Skill tự kích hoạt theo tình huống nhờ hook SessionStart inject skill using-superpowers vào context đầu phiên — phiên Muse Code không cần gọi tay từng skill.","Đã map vào CHECKLIST triển khai dự án gộp 1 bản (25/10): mỗi phase trong pipeline 8 cổng PLAN → ASSIGN → IMPLEMENT → REVIEW → REBUTTAL → ADJUDICATE → TEST → ARCHIVE đều ghi skill Superpowers tương ứng."],
+    pills:["15 skills","brainstorming → plan → TDD → verify","auto-trigger qua hook","YAGNI · DRY · red/green TDD"]},
+  children:[
+    {title:"using-superpowers — skill mồi (bootstrap)", tag:"Hook SessionStart", desc:"Hook SessionStart đọc nguyên file skills/using-superpowers/SKILL.md và inject làm context đầu phiên. Luật lõi: chỉ cần 1% khả năng một skill áp dụng được là bắt buộc invoke skill đó trước mọi phản hồi — kể cả trước câu hỏi làm rõ.", detail:{points:["Hook đã review trước khi approve: chỉ đọc file skill rồi xuất context — không network, không ghi file, không đọc credential.","Trạng thái approve: plugin:superpowers:hook:session-start = trusted_enabled."]}},
+    {title:"Thiết kế & lập kế hoạch — trước khi chạm code", desc:"Ba skill chặn đứng thói quen nhảy vào code: làm rõ ý định, chốt spec được duyệt, rồi mới plan và cách ly workspace.", children:[
+      {title:"brainstorming", tag:"Cổng đầu tiên", desc:"Bắt buộc trước mọi việc sáng tạo / sửa hành vi: agent hỏi từng câu để moi spec ra khỏi hội thoại, trình bày design theo từng chunk ngắn cho Pháp duyệt. Chưa duyệt design = chưa viết code."},
+      {title:"writing-plans", desc:"Từ spec đã duyệt thành implementation plan đủ rõ để một kỹ sư junior ít ngữ cảnh, ngại test cũng làm theo được — nhấn TDD red/green thật, YAGNI và DRY."},
+      {title:"using-git-worktrees", desc:"Đảm bảo workspace cách ly bằng git worktree trước khi thực thi plan, tách việc mới khỏi cây làm việc hiện tại."}
+    ]},
+    {title:"Thực thi — giao việc cho subagent", desc:"Sau tiếng 'go': plan được thực thi theo từng task bằng subagent, có review ở giữa — agent có thể chạy tự chủ hàng giờ mà không lệch plan.", children:[
+      {title:"subagent-driven-development", desc:"Chế độ chính: mỗi task giao một subagent implementer, reviewer soi lại theo spec và chất lượng, vòng fix → re-review cho tới khi đạt."},
+      {title:"executing-plans", desc:"Thực thi plan ngay trong phiên hiện tại khi không có subagent, hoặc khi Pháp chọn làm inline."},
+      {title:"dispatching-parallel-agents", desc:"2+ việc độc lập, không chia sẻ state → phát song song nhiều agent cùng lúc thay vì làm tuần tự."}
+    ]},
+    {title:"Kỹ thuật & chất lượng", children:[
+      {title:"test-driven-development", tag:"Red → Green", desc:"Mọi feature / bugfix: viết test trước, xem nó fail (red), viết code tối thiểu cho pass (green), rồi refactor. Chưa thấy test fail trước thì chưa chứng minh được test có tác dụng."},
+      {title:"systematic-debugging", desc:"Gặp bug / test fail: điều tra gốc rễ theo pha — đọc lỗi, tái hiện, truy vết — trước khi đề xuất fix. Cấm vá triệu chứng."},
+      {title:"verification-before-completion", tag:"Chống báo xong ẩu", desc:"Trước khi tuyên bố xong / fixed / pass: bắt buộc chạy lệnh kiểm chứng và đọc output thật. Không có bằng chứng tươi = không được nhận hoàn thành."}
+    ]},
+    {title:"Review & đóng nhánh", children:[
+      {title:"requesting-code-review", desc:"Khi xong task hoặc trước merge: xin review độc lập để đối chiếu việc làm với yêu cầu ban đầu."},
+      {title:"receiving-code-review", desc:"Nhận feedback review: kiểm chứng kỹ thuật trước khi làm theo, nhất là khi feedback mơ hồ hoặc đáng ngờ — không làm theo mù quáng."},
+      {title:"finishing-a-development-branch", desc:"Implementation xong, test pass: quyết cách tích hợp công việc (merge / PR / giữ nhánh) theo quy trình có cấu trúc."}
+    ]},
+    {title:"Mở rộng & chẩn đoán chính Superpowers", children:[
+      {title:"writing-skills", desc:"Quy trình tạo / sửa skill mới — gồm cả kiểm thử skill bằng subagent trước khi đưa vào dùng."},
+      {title:"diagnosing-superpowers", desc:"Khi một phiên Superpowers đi chệch (lặp việc, bỏ qua plan, skill không kích hoạt): chẩn đoán có hệ thống từ transcript của phiên."}
+    ]},
+    {title:"Trạng thái triển khai trên VM — 25/10", tag:"Xong · smoke test đạt với Codex", desc:"Plugin đã cài + approve trên Muse Code của VM; phiên live chạy qua muse-9r.sh (shim 9Router) thay cho muse login.", detail:{points:["Đường cài quanh co: muse plugins install bản v7.0.1 lỗi 'frozen plugin package metadata' ở Muse Code 1.4.13 — plugin tối giản tự tạo cũng lỗi y hệt, nên lỗi nằm ở muse chứ không phải Superpowers. Workaround tạm lúc đó: muse skills install đủ 15/15 skill ở user scope.","Sau đó cài thành công từ nhánh dev (b58deb3 — khác v7.0.1 đúng 1 dòng: hook gọi bash thay vì sh): installed superpowers 7.0.1, enabled / active / valid đều true, 15 skill nguồn plugin đều on.","Smoke test chuẩn upstream ('Let's make a react todo list'): với ag/gemini-3.8-flash TRƯỢT — phiên viết thẳng index.html, không hỏi trước; với cx/gpt-6-astra ĐẠT — dùng brainstorming, hỏi trước, tạo 0 file. Kết luận: hook + plugin chạy đúng đầu-cuối, khác biệt nằm ở hành vi model.","Phiên muse live không qua Meta login (device flow lỗi transport 3 lần) mà qua shim riêng: ~/workspace/muse-shim/muse-9r.sh trỏ Muse vào 9Router :20128 qua shim :20129."]}}
+  ]},
+{ id:"agentmemory", branch:"agentmemory", title:"AGENTMEMORY — Bộ nhớ dài hạn của agent", tag:"v0.9.30 · :3111 / :3113", desc:"Server bộ nhớ riêng cho các agent stateless của Triumvirate (của 'trio'): lưu bài học (lesson) rút ra từ các lần chạy pipeline trước, để lần chạy sau coder không lặp lại lỗi cũ. Đây là bộ nhớ CỦA AGENT — không phải của Muse.",
+  detail:{ kv:[["Gói cài","@agentmemory/agentmemory v0.9.30 · engine iii v0.22.1"],["REST / viewer","127.0.0.1:3113 · engine :3111 · chỉ localhost"],["Data","~/.agentmemory · ~18MB · nằm trong home → sống qua VM rebuild"],["Auth","Bearer secret tại ~/.agentmemory/secret (chmod 600, server tự sinh)"],["Start","~/workspace/agentmemory-poc/start.sh"],["Helper","~/workspace/9router/agent_memory.py — recall / remember / lessons_block"],["RAM","~338MB khi model embedding đã load (node ~288MB + iii ~50MB)"],["Tài liệu","~/workspace/agentmemory-poc/POC.md"]],
+    points:["Verdict chốt 18/10: KHÔNG dùng agentmemory cho Muse — Boss đã có bộ nhớ built-in (nhánh 6), chạy hai hệ song song sẽ phân mảnh. Nó đúng thuốc cho agent 9Router vì các agent đó stateless, mỗi lần chạy bắt đầu từ zero.","Nguyên tắc bất biến: memory không bao giờ làm hỏng pipeline — helper best-effort, mọi lỗi đều trả về rỗng và pipeline chạy tiếp như không có memory.","Chỉ lưu lesson ở các điểm quyết định (critic bắt lỗi, test fail) — không auto-remember mọi output để tránh rác."],
+    pills:["remember → 201","smart-search","past_lessons","BM25 + vector","MiniLM-L6-v2","watchdog 15′"]},
+  children:[
+    {title:"Vì sao có nó — agent stateless cần trí nhớ", desc:"Pháp hỏi 18/10 có nên triển khai agentmemory (fork tanphap/agentmemory của rohitg00/agentmemory) để quản lý bộ nhớ/ngữ cảnh. Kết luận: làm PoC cho agent 9Router — Pháp duyệt 'Làm PoC cho agent 9Router', rồi 'đấu luôn đi, có lỗi thì giám sát fix sau'."},
+    {title:"Server & engine iii", desc:"Cài bằng npm install -g @agentmemory/agentmemory vào ~/.local nên sống qua VM rebuild; engine iii v0.22.1 (pinned) tự tải về ~/.agentmemory/bin (18MB).", children:[
+      {title:"Cổng & endpoint thật", desc:"Engine :3111, REST + viewer :3113, cổng engine phụ :49134. Endpoint thật: POST /agentmemory/remember, POST /agentmemory/smart-search, GET /agentmemory/livez. Gốc / và /health trả 404 là đúng thiết kế, không phải lỗi; kiểm tra 22/10 cổng :3111 trả 401 đòi secret — đúng thiết kế."},
+      {title:"Gotcha lần start đầu", desc:"Lần chạy đầu tar báo lỗi chown (container thiếu CAP_CHOWN) nhưng binary vẫn bung đủ; lần start thứ 2 nhận luôn, server live sau ~6 giây."},
+      {title:"Round-trip đã verify thật", desc:"POST /agentmemory/remember → 201 có id memory; POST /agentmemory/smart-search tìm lại đúng memory, score 1. Lúc PoC chưa bật embedding: RAM ~175MB (node ~126MB + iii ~49MB)."}
+    ]},
+    {title:"Đấu nối pipeline — 3 hook", tag:"Xong 18/10", desc:"Đấu vào ~/workspace/pipeline/pipeline.py theo kiểu phẫu thuật, qua helper agent_memory.py. Import best-effort: thiếu module hoặc server chết thì pipeline chạy như cũ.", children:[
+      {title:"Hook 1 — _payload(): past_lessons cho IMPLEMENT / REBUTTAL", desc:"Trước khi coder code: recall theo task + scope, lấy tối đa 3 lesson cũ đưa vào payload — vd bài học 'validate JSON trước khi gọi artifact.invoke_action'."},
+      {title:"Hook 2 — _remember_critic_lessons: sau REVIEW khác APPROVE", desc:"Mỗi issue critic bắt được lưu thành một lesson với concepts [triumvirate, critic, lesson]. Verdict APPROVE là no-op, không lưu."},
+      {title:"Hook 3 — _remember_test_lessons: sau TEST fail", desc:"Test fail thì lưu root cause + output thành lesson với concepts [triumvirate, testing, lesson] để lần sau tránh đúng lỗi đó."},
+      {title:"Verify đấu nối", desc:"25/25 unit tests pass; smoke test: lesson vừa lưu được recall đúng trong payload IMPLEMENT của lần chạy sau; REVIEW không nhận past_lessons. Hai memory test giả đã bị supersede bằng system-note (mem_mvdd1bkv_dc95368b31c9)."}
+    ]},
+    {title:"Semantic search — đã bật", tag:"Hybrid BM25 + vector", desc:"Pháp lệnh 'Cài thêm @xenova đi' (18/10) → semantic search bật thật. EMBEDDING_PROVIDER=local trong ~/.agentmemory/.env (600).", children:[
+      {title:"Model Xenova/all-MiniLM-L6-v2", desc:"Bản q8, 23MB, cache tại ~/.local/lib/node_modules/@huggingface/transformers/.cache/ — nằm trong home nên qua được rebuild."},
+      {title:"Bài học package: @huggingface thay @xenova", desc:"Bản v0.9.30 dùng package tên mới @huggingface/transformers (+ onnxruntime-node); lần cài @xenova/transformers trước đó là đoán sai tên, log server báo rõ mới sửa được."},
+      {title:"Verify ngữ nghĩa thật", desc:"Query diễn đạt lại hoàn toàn, không trùng từ khoá ('how are incoming requests distributed across machines') vẫn trúng đúng memory về load balancer, score 0.6 — hybrid BM25 + vector chạy thật, không chỉ BM25."}
+    ]},
+    {title:"Watchdog giữ sống sau rebuild", tag:"Gắn 18/10", desc:"watchdog.sh có section riêng (dòng 25–41): check livez AgentMemory, chết thì chạy lại start.sh — best-effort, fail chỉ ghi log, không đổi exit code vì sức khoẻ 9Router mới quyết định wake.", detail:{points:["Test thật: kill server → chạy watchdog → sống lại sau ~9 giây, livez 200, smart-search vẫn trả lesson cũ — không mất memory.","Sau VM rebuild, server được restart trong poll 15 phút của hook nine-router-watchdog, không phải ngay lập tức."]}},
+    {title:"Trạng thái & ranh giới", desc:"Kiểm tra hệ thống 22/10: process chạy, data 18MB, hệ thống khoẻ. Ranh giới giữ nguyên từ verdict 18/10: AgentMemory chỉ phục vụ agent 9Router; bộ nhớ của Muse/Boss nằm ở nhánh 6, không trộn hai hệ."}
+  ]}
+];
+
+var treeEl = document.getElementById('tree');
+var legendEl = document.getElementById('legend');
+Object.keys(BRANCHES).forEach(function(k){
+  var s=document.createElement('span');
+  s.innerHTML='<span class="dot" style="background:'+BRANCHES[k].color+'"></span>'+BRANCHES[k].label;
+  legendEl.appendChild(s);
+});
+
+function makeNode(item, isBranch){
+  var li=document.createElement('li');
+  var kids=item.children||[];
+  var row=document.createElement('div');
+  row.className='node-row'+(isBranch?' branch':'');
+  row.setAttribute('tabindex','0');
+  row.dataset.title=item.title;
+  var btn=document.createElement('button');
+  btn.type='button'; btn.className='toggle'+(kids.length?'':' leaf');
+  btn.textContent=kids.length?'−': '·';
+  btn.setAttribute('aria-label', kids.length?'Thu/mở nhánh':'Nút lá');
+  var txt=document.createElement('div'); txt.className='node-text';
+  var dot = isBranch ? '<span class="dot" style="background:'+BRANCHES[item.branch].color+';width:11px;height:11px;flex-basis:11px"></span>' : '';
+  txt.innerHTML='<div class="node-title">'+dot+'<span class="t">'+escapeHtml(item.title)+'</span>'+(item.tag?'<span class="tag">'+escapeHtml(item.tag)+'</span>':'')+'</div>'+(item.desc?'<div class="node-desc">'+escapeHtml(item.desc)+'</div>':'');
+  row.appendChild(btn); row.appendChild(txt);
+  li.appendChild(row);
+  var ul=null;
+  if(kids.length){
+    ul=document.createElement('ul');
+    kids.forEach(function(c){ ul.appendChild(makeNode(c,false)); });
+    li.appendChild(ul);
+  }
+  function toggle(){
+    if(!kids.length) return;
+    var hidden=ul.classList.toggle('hidden-children');
+    btn.textContent=hidden?'+':'−';
+  }
+  btn.addEventListener('click',function(e){ e.stopPropagation(); toggle(); selectNode(item,row); });
+  row.addEventListener('click',function(){ selectNode(item,row); });
+  row.addEventListener('keydown',function(e){ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); selectNode(item,row); if(kids.length) toggle(); }});
+  li._ul=ul; li._btn=btn; li._item=item; li._row=row;
+  return li;
+}
+function escapeHtml(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+DATA.forEach(function(b){ treeEl.appendChild(makeNode(b,true)); });
+
+function selectNode(item,row){
+  document.querySelectorAll('.node-row.selected').forEach(function(n){ n.classList.remove('selected'); });
+  if(row) row.classList.add('selected');
+  var br = findBranch(item) || BRANCHES.boss;
+  document.getElementById('d-branch').textContent = br.label;
+  document.getElementById('d-title').textContent = item.title;
+  document.getElementById('d-desc').textContent = item.desc || '';
+  var body=document.getElementById('d-body'); body.innerHTML='';
+  var d=item.detail||{};
+  if(d.kv && d.kv.length){
+    var h=document.createElement('h4'); h.textContent='Thông số'; body.appendChild(h);
+    var dl=document.createElement('dl'); dl.className='kv';
+    d.kv.forEach(function(pair){ var dt=document.createElement('dt'); dt.textContent=pair[0]; var dd=document.createElement('dd'); dd.textContent=pair[1]; dl.appendChild(dt); dl.appendChild(dd); });
+    body.appendChild(dl);
+  }
+  var pts = d.points || [];
+  if(item.desc && !d.points) pts=[];
+  if(pts.length){
+    var h2=document.createElement('h4'); h2.textContent='Điểm cần nhớ'; body.appendChild(h2);
+    var ul=document.createElement('ul'); pts.forEach(function(p){ var li=document.createElement('li'); li.textContent=p; ul.appendChild(li); }); body.appendChild(ul);
+  }
+  if(item.children && item.children.length){
+    var h3=document.createElement('h4'); h3.textContent='Nhánh con ('+item.children.length+')'; body.appendChild(h3);
+    var ul2=document.createElement('ul'); item.children.forEach(function(c){ var li=document.createElement('li'); li.innerHTML='<b>'+escapeHtml(c.title)+'</b>'+(c.desc?' — '+escapeHtml(c.desc):''); ul2.appendChild(li); }); body.appendChild(ul2);
+  }
+  if(d.pills && d.pills.length){
+    var h4=document.createElement('h4'); h4.textContent='Từ khoá'; body.appendChild(h4);
+    var pr=document.createElement('div'); pr.className='pill-row'; d.pills.forEach(function(p){ var s=document.createElement('span'); s.className='pill mono'; s.textContent=p; pr.appendChild(s); }); body.appendChild(pr);
+  }
+  if(!d.kv && !pts.length && !(item.children&&item.children.length) && !(d.pills&&d.pills.length)){
+    var p=document.createElement('p'); p.style.color='var(--muted)'; p.style.fontSize='14px'; p.textContent='Nút lá — chi tiết nằm ngay trong mô tả trên sơ đồ.'; body.appendChild(p);
+  }
+  if(window.innerWidth<=900){ /* keep detail below; do not force scroll on every tap */ }
+}
+function findBranch(item){
+  for(var i=0;i<DATA.length;i++){ if(DATA[i]===item) return BRANCHES[DATA[i].branch]; if(descends(DATA[i],item)) return BRANCHES[DATA[i].branch]; }
+  return null;
+}
+function descends(parent,target){ if(!parent.children) return false; for(var i=0;i<parent.children.length;i++){ if(parent.children[i]===target||descends(parent.children[i],target)) return true; } return false; }
+
+/* default select Boss */
+(function(){ var first=treeEl.querySelector('li'); if(first) selectNode(DATA[0], first._row); })();
+
+function setAll(open){
+  treeEl.querySelectorAll('li').forEach(function(li){
+    if(li._ul){ li._ul.classList.toggle('hidden-children', !open); li._btn.textContent=open?'−':'+'; }
+  });
+}
+document.getElementById('expandAll').addEventListener('click',function(){ setAll(true); });
+document.getElementById('collapseAll').addEventListener('click',function(){
+  treeEl.querySelectorAll(':scope > li').forEach(function(li){ /* keep top level visible */ });
+  setAll(false);
+  /* re-open nothing: top-level rows stay, their children hidden */
+});
+document.getElementById('focusWorkflow').addEventListener('click',function(){ document.getElementById('workflow').scrollIntoView({behavior:'smooth'}); });
+
+var searchInput=document.getElementById('search');
+searchInput.addEventListener('input',function(){
+  var q=searchInput.value.trim().toLowerCase();
+  treeEl.querySelectorAll('li').forEach(function(li){
+    var t=li._row.querySelector('.t');
+    if(!t) return;
+    var raw=li._item.title+(li._item.desc?' '+li._item.desc:'');
+    if(!q){ li.style.display=''; t.innerHTML=escapeHtml(li._item.title); return; }
+    var hit=raw.toLowerCase().indexOf(q)>=0;
+    li.style.display=hit?'':'none';
+    if(hit){
+      var idx=li._item.title.toLowerCase().indexOf(q);
+      if(idx>=0){ t.innerHTML=escapeHtml(li._item.title.slice(0,idx))+'<mark>'+escapeHtml(li._item.title.slice(idx,idx+q.length))+'</mark>'+escapeHtml(li._item.title.slice(idx+q.length)); }
+      /* reveal ancestors */
+      var p=li.parentElement; while(p && p!==treeEl){ if(p.tagName==='UL') p.classList.remove('hidden-children'); p=p.parentElement; }
+      var anc=li.parentElement.closest('li'); while(anc){ anc.style.display=''; anc=anc.parentElement.closest('li'); }
+    }
+  });
+});
+</script>
+</body>
+</html>
